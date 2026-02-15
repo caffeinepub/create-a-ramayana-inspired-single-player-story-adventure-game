@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useSaveProgress, useLoadProgress } from '../hooks/useQueries';
 import { GameState } from '../game/state/gameState';
+import { encodeCharacterId, decodeCharacterId } from '../game/characters/characterPersistence';
 import { toast } from 'sonner';
 import LoginButton from './Auth/LoginButton';
 import type { Progress, ObjectiveProgress } from '../backend';
@@ -13,6 +14,7 @@ interface SaveLoadPanelProps {
   onLoadGame?: (
     chapter: number,
     stateVariables: Record<string, string>,
+    characterId?: string,
     completedObjectives?: Array<ObjectiveProgress>
   ) => void;
 }
@@ -58,6 +60,7 @@ export default function SaveLoadPanel({ gameState, onLoadGame }: SaveLoadPanelPr
           ['courage', gameState.stateVariables.courage.toString()],
         ],
         completedObjectives: [objectiveProgress],
+        characterId: encodeCharacterId(gameState.selectedCharacterId),
       };
 
       await saveProgressMutation.mutateAsync(progress);
@@ -91,8 +94,11 @@ export default function SaveLoadPanel({ gameState, onLoadGame }: SaveLoadPanelPr
         stateVars[key] = value;
       });
 
+      // Decode character ID from backend
+      const characterId = decodeCharacterId(progress.characterId);
+
       if (onLoadGame) {
-        onLoadGame(Number(progress.chapter), stateVars, progress.completedObjectives);
+        onLoadGame(Number(progress.chapter), stateVars, characterId, progress.completedObjectives);
         toast.success('Progress loaded!');
       }
     } catch (error) {

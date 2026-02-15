@@ -1,13 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
+  "projectStateVersion": 9,
   "summary": "Create a game inspired by the Ramayan (Ramayana).",
   "architectural_notes": [],
   "known_issues": [
     "Previous build attempt for the Ramayan fight screen failed (build error)."
   ],
   "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Gritty urban street fighting title background with city lights, alley silhouettes, and dramatic contrast (streetfight-title-bg.dim_1920x1080.png)\n- Urban alley fight scene background with wet pavement reflections and graffiti textures (streetfight-alley-bg.dim_1920x1080.png)\n- Warehouse/underground fight club background with ring lights and crowd silhouettes (streetfight-warehouse-bg.dim_1920x1080.png)\n- Rooftop/night skyline fight scene background with HVAC units and neon signage (streetfight-rooftop-bg.dim_1920x1080.png)\n- Stylized character portrait set (protagonist + 3 rivals) in a cohesive gritty illustration style (streetfight-portraits-set.dim_1024x1024.png)\n- Top-down or isometric city map/route illustration with districts marked as fight venues (streetfight-city-map.dim_1600x900.png)",
+  "imageRequirements": "## Required Images\n- Street fighter portrait, character 1 (streetfighter-char-1-portrait.dim_768x768.png)\n- Street fighter portrait, character 2 (streetfighter-char-2-portrait.dim_768x768.png)\n- Street fighter portrait, character 3 (streetfighter-char-3-portrait.dim_768x768.png)",
   "existing_features": [
     {
       "id": "feature-build-a-playable-single-player-story-adventure-game-inspired-by-the-ramayana-ramayan-featuring-an-original-retelling-structure-chapters-episodes-with-original-wording-and-presentation-do-not-copy-text-from-any-copyrighted-adaptation",
@@ -120,6 +120,54 @@
         "REQ-14"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-small-set-of-predefined-playable-characters-at-least-3-to-the-street-fighting-game-each-with-a-stable-characterid-display-name-short-bio-blurb-and-portrait-image-path-and-store-these-definitions-in-a-dedicated-frontend-module-so-they-can-be-reused-across-screens",
+      "title": "Add a small set of predefined playable characters (at least 3) to the street-fighting game, each with a stable characterId, display name, short bio blurb, and portrait image path, and store these definitions in a dedicated frontend module so they can be reused across screens.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-character-selection-ux-so-the-player-can-choose-a-character-before-starting-a-new-game-and-ensure-the-selected-character-is-clearly-shown-as-selected-and-can-be-changed-before-confirming",
+      "title": "Implement a character selection UX so the player can choose a character before starting a new game, and ensure the selected character is clearly shown as selected and can be changed before confirming.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-the-selected-character-for-authenticated-users-by-extending-the-backend-user-profile-to-include-the-chosen-characterid-and-update-the-profile-setup-flow-to-collect-both-fighter-name-and-character-selection",
+      "title": "Persist the selected character for authenticated users by extending the backend user profile to include the chosen characterId, and update the profile setup flow to collect both fighter name and character selection.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-the-selected-character-into-gameplay-ui-by-displaying-the-chosen-character-name-and-portrait-in-the-hud-and-or-chapter-screen-without-changing-the-existing-story-structure-chapters-choices-challenges",
+      "title": "Integrate the selected character into gameplay UI by displaying the chosen character (name and portrait) in the HUD and/or chapter screen, without changing the existing story structure (chapters/choices/challenges).",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-selected-character-is-preserved-across-save-load-by-including-characterid-in-the-saved-progress-payload-and-restoring-it-when-loading-progress",
+      "title": "Ensure the selected character is preserved across Save/Load by including characterId in the saved progress payload and restoring it when loading progress.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-render-any-newly-generated-character-portrait-assets-as-static-files-under-frontend-public-assets-generated-and-reference-them-from-the-character-definitions-and-ui-so-there-are-no-missing-asset-paths",
+      "title": "Render any newly generated character portrait assets as static files under frontend/public/assets/generated and reference them from the character definitions and UI so there are no missing asset paths.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -138,6 +186,12 @@
     {
       "id": "AR-3",
       "summary": "Create a street fighting game.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add characters to the game (e.g., create/introduce a playable character and related character content).",
       "reqIds": [],
       "status": "pending"
     }

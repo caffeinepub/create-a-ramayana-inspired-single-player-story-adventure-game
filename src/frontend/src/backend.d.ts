@@ -13,10 +13,12 @@ export interface ObjectiveProgress {
 }
 export interface UserProfile {
     name: string;
+    characterId: bigint;
 }
 export interface Progress {
     completedObjectives: Array<ObjectiveProgress>;
     stateVariables: Array<[string, string]>;
+    characterId: bigint;
     chapter: bigint;
 }
 export enum UserRole {

@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-existing-ramayana-inspired-chapter-content-with-an-original-english-street-fighting-storyline-using-the-current-chapter-mission-structure-chapters-with-narratives-choices-objectives-and-a-challenge-keeping-the-same-total-number-of-chapters-unless-additional-chapters-are-necessary-for-coherence",
-      "featureTitle": "Replace the existing Ramayana-inspired chapter content with an original, English, street-fighting storyline using the current chapter/mission structure (chapters with narratives, choices, objectives, and a challenge), keeping the same total number of chapters unless additional chapters are necessary for coherence.",
+      "featureId": "feature-add-a-small-set-of-predefined-playable-characters-at-least-3-to-the-street-fighting-game-each-with-a-stable-characterid-display-name-short-bio-blurb-and-portrait-image-path-and-store-these-definitions-in-a-dedicated-frontend-module-so-they-can-be-reused-across-screens",
+      "featureTitle": "Add a small set of predefined playable characters (at least 3) to the street-fighting game, each with a stable characterId, display name, short bio blurb, and portrait image path, and store these definitions in a dedicated frontend module so they can be reused across screens.",
       "files": [
-        "frontend/src/game/story/chapters.ts"
+        "frontend/src/game/characters/characterPersistence.ts",
+        "frontend/src/game/characters/characters.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,17 +17,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-10"
+        "REQ-15"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-start-screen-and-chapter-screen-user-facing-text-to-match-the-street-fighting-theme-game-title-descriptions-labels-and-end-of-game-messaging-while-keeping-the-existing-navigation-and-save-load-entry-points-intact",
-      "featureTitle": "Update the start screen and chapter screen user-facing text to match the street fighting theme (game title, descriptions, labels, and end-of-game messaging) while keeping the existing navigation and save/load entry points intact.",
+      "featureId": "feature-implement-a-character-selection-ux-so-the-player-can-choose-a-character-before-starting-a-new-game-and-ensure-the-selected-character-is-clearly-shown-as-selected-and-can-be-changed-before-confirming",
+      "featureTitle": "Implement a character selection UX so the player can choose a character before starting a new game, and ensure the selected character is clearly shown as selected and can be changed before confirming.",
       "files": [
-        "frontend/src/components/Auth/ProfileSetupModal.tsx",
+        "frontend/src/App.tsx",
+        "frontend/src/components/CharacterSelectModal.tsx",
         "frontend/src/game/state/gameState.ts",
-        "frontend/src/screens/ChapterScreen.tsx",
         "frontend/src/screens/StartScreen.tsx"
       ],
       "components": [
@@ -38,22 +39,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-16"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-retheme-the-ui-from-the-current-parchment-epic-aesthetic-to-a-gritty-urban-street-fighting-aesthetic-e-g-concrete-metal-textures-high-contrast-neutrals-punchy-accent-colors-and-apply-it-consistently-across-start-screen-hud-cards-buttons-and-mission-status-ui-do-not-introduce-a-default-blue-purple-look",
-      "featureTitle": "Retheme the UI from the current parchment/epic aesthetic to a gritty urban street-fighting aesthetic (e.g., concrete/metal textures, high-contrast neutrals, punchy accent colors) and apply it consistently across start screen, HUD, cards, buttons, and mission status UI; do not introduce a default blue/purple look.",
+      "featureId": "feature-persist-the-selected-character-for-authenticated-users-by-extending-the-backend-user-profile-to-include-the-chosen-characterid-and-update-the-profile-setup-flow-to-collect-both-fighter-name-and-character-selection",
+      "featureTitle": "Persist the selected character for authenticated users by extending the backend user profile to include the chosen characterId, and update the profile setup flow to collect both fighter name and character selection.",
       "files": [
-        "frontend/src/components/Auth/LoginButton.tsx",
-        "frontend/src/components/GameLayout.tsx",
-        "frontend/src/components/Hud.tsx",
-        "frontend/src/components/SaveLoadPanel.tsx",
-        "frontend/src/index.css",
-        "frontend/src/screens/ChapterScreen.tsx",
-        "frontend/src/screens/StartScreen.tsx",
-        "frontend/tailwind.config.js"
+        "frontend/src/App.tsx",
+        "frontend/src/components/Auth/ProfileSetupModal.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -64,16 +59,16 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-12"
+        "REQ-17"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-street-fight-appropriate-interactive-challenge-used-by-at-least-one-chapter-e-g-a-simple-combo-quick-time-or-timing-based-brawl-mini-game-and-integrate-it-into-the-existing-challenge-selection-rendering-flow-so-mission-completion-can-depend-on-it",
-      "featureTitle": "Add a street-fight-appropriate interactive challenge used by at least one chapter (e.g., a simple combo/quick-time or timing-based brawl mini-game) and integrate it into the existing challenge selection/rendering flow so mission completion can depend on it.",
+      "featureId": "feature-integrate-the-selected-character-into-gameplay-ui-by-displaying-the-chosen-character-name-and-portrait-in-the-hud-and-or-chapter-screen-without-changing-the-existing-story-structure-chapters-choices-challenges",
+      "featureTitle": "Integrate the selected character into gameplay UI by displaying the chosen character (name and portrait) in the HUD and/or chapter screen, without changing the existing story structure (chapters/choices/challenges).",
       "files": [
-        "frontend/src/game/challenges/BrawlChallenge.tsx",
-        "frontend/src/game/story/chapters.ts",
+        "frontend/src/components/Hud.tsx",
+        "frontend/src/game/state/gameState.ts",
         "frontend/src/screens/ChapterScreen.tsx"
       ],
       "components": [
@@ -85,17 +80,17 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
+        "REQ-18"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-generate-and-wire-up-new-static-image-assets-for-the-street-fighting-game-title-background-chapter-backgrounds-and-character-scene-illustration-set-by-placing-them-under-frontend-public-assets-generated-and-updating-all-references-so-no-missing-asset-paths-remain",
-      "featureTitle": "Generate and wire up new static image assets for the street fighting game (title background, chapter backgrounds, and character/scene illustration set) by placing them under `frontend/public/assets/generated` and updating all references so no missing-asset paths remain.",
+      "featureId": "feature-ensure-the-selected-character-is-preserved-across-save-load-by-including-characterid-in-the-saved-progress-payload-and-restoring-it-when-loading-progress",
+      "featureTitle": "Ensure the selected character is preserved across Save/Load by including characterId in the saved progress payload and restoring it when loading progress.",
       "files": [
-        "frontend/src/game/story/chapters.ts",
-        "frontend/src/screens/ChapterScreen.tsx",
-        "frontend/src/screens/StartScreen.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/SaveLoadPanel.tsx",
+        "frontend/src/game/state/gameState.ts"
       ],
       "components": [
         "authorization@4.0.0",
@@ -106,7 +101,26 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-14"
+        "REQ-19"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-render-any-newly-generated-character-portrait-assets-as-static-files-under-frontend-public-assets-generated-and-reference-them-from-the-character-definitions-and-ui-so-there-are-no-missing-asset-paths",
+      "featureTitle": "Render any newly generated character portrait assets as static files under frontend/public/assets/generated and reference them from the character definitions and UI so there are no missing asset paths.",
+      "files": [
+        "frontend/src/game/characters/characters.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-20"
       ],
       "confidence": "high"
     }

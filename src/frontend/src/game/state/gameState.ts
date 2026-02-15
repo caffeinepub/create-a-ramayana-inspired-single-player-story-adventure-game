@@ -21,9 +21,10 @@ export interface GameState {
   challengeCompleted: boolean;
   currentNarrative: number;
   chapterObjectives: ChapterObjectives;
+  selectedCharacterId: string;
 }
 
-export function createNewGame(): GameState {
+export function createNewGame(characterId: string): GameState {
   return {
     currentChapter: 0,
     stateVariables: {
@@ -40,13 +41,15 @@ export function createNewGame(): GameState {
       madeChoice: false,
       completedChallenge: false,
     },
+    selectedCharacterId: characterId,
   };
 }
 
 export function loadGameFromProgress(
   chapter: number,
   stateVars: Record<string, string>,
-  completedObjectives?: Array<{ missionId: bigint; objectives: Array<[string, boolean]> }>
+  completedObjectives?: Array<{ missionId: bigint; objectives: Array<[string, boolean]> }>,
+  characterId?: string
 ): GameState {
   // Find objectives for current chapter
   const currentChapterObjectives = completedObjectives?.find(
@@ -81,6 +84,7 @@ export function loadGameFromProgress(
     challengeCompleted: objectives.completedChallenge,
     currentNarrative: objectives.readStory ? chapters[chapter]?.narratives.length - 1 || 0 : 0,
     chapterObjectives: objectives,
+    selectedCharacterId: characterId || 'iron-fist', // Default fallback
   };
 }
 

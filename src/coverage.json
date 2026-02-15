@@ -1,135 +1,132 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T15:45:41.504Z",
+  "generatedAt": "2026-02-15T15:57:36.377Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 5,
+    "total": 6,
+    "implemented": 6,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Replace the existing Ramayana-inspired chapter content with an original, English, street-fighting storyline using the current chapter/mission structure (chapters with narratives, choices, objectives, and a challenge), keeping the same total number of chapters unless additional chapters are necessary for coherence.",
+        "id": "REQ-15",
+        "summary": "Add a small set of predefined playable characters (at least 3) to the street-fighting game, each with a stable characterId, display name, short bio blurb, and portrait image path, and store these definitions in a dedicated frontend module so they can be reused across screens.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/game/story/chapters.ts"
+          "frontend/src/game/characters/characters.ts",
+          "frontend/src/game/characters/characterPersistence.ts"
         ],
         "matchedFiles": [
-          "frontend/src/game/story/chapters.ts"
+          "frontend/src/game/characters/characters.ts",
+          "frontend/src/game/characters/characterPersistence.ts"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Update the start screen and chapter screen user-facing text to match the street fighting theme (game title, descriptions, labels, and end-of-game messaging) while keeping the existing navigation and save/load entry points intact.",
+        "id": "REQ-16",
+        "summary": "Implement a character selection UX so the player can choose a character before starting a new game, and ensure the selected character is clearly shown as selected and can be changed before confirming.",
         "status": "implemented",
         "plannedFiles": [
+          "frontend/src/components/CharacterSelectModal.tsx",
           "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
-          "frontend/src/game/state/gameState.ts",
-          "frontend/src/components/Auth/ProfileSetupModal.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/game/state/gameState.ts"
         ],
         "matchedFiles": [
+          "frontend/src/components/CharacterSelectModal.tsx",
           "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
-          "frontend/src/game/state/gameState.ts",
-          "frontend/src/components/Auth/ProfileSetupModal.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/game/state/gameState.ts"
         ]
       },
       {
-        "id": "REQ-12",
-        "summary": "Retheme the UI from the current parchment/epic aesthetic to a gritty urban street-fighting aesthetic (e.g., concrete/metal textures, high-contrast neutrals, punchy accent colors) and apply it consistently across start screen, HUD, cards, buttons, and mission status UI; do not introduce a default blue/purple look.",
+        "id": "REQ-17",
+        "summary": "Persist the selected character for authenticated users by extending the backend user profile to include the chosen characterId, and update the profile setup flow to collect both fighter name and character selection.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js",
-          "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/components/Auth/ProfileSetupModal.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Auth/ProfileSetupModal.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-18",
+        "summary": "Integrate the selected character into gameplay UI by displaying the chosen character (name and portrait) in the HUD and/or chapter screen, without changing the existing story structure (chapters/choices/challenges).",
+        "status": "implemented",
+        "plannedFiles": [
           "frontend/src/components/Hud.tsx",
-          "frontend/src/components/SaveLoadPanel.tsx",
-          "frontend/src/components/Auth/LoginButton.tsx",
-          "frontend/src/components/GameLayout.tsx"
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/state/gameState.ts"
         ],
         "matchedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js",
-          "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
           "frontend/src/components/Hud.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/state/gameState.ts"
+        ]
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Ensure the selected character is preserved across Save/Load by including characterId in the saved progress payload and restoring it when loading progress.",
+        "status": "implemented",
+        "plannedFiles": [
           "frontend/src/components/SaveLoadPanel.tsx",
-          "frontend/src/components/Auth/LoginButton.tsx",
-          "frontend/src/components/GameLayout.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/game/state/gameState.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/SaveLoadPanel.tsx",
+          "frontend/src/App.tsx",
+          "frontend/src/game/state/gameState.ts"
         ]
       },
       {
-        "id": "REQ-13",
-        "summary": "Add a street-fight-appropriate interactive challenge used by at least one chapter (e.g., a simple combo/quick-time or timing-based brawl mini-game) and integrate it into the existing challenge selection/rendering flow so mission completion can depend on it.",
+        "id": "REQ-20",
+        "summary": "Render any newly generated character portrait assets as static files under frontend/public/assets/generated and reference them from the character definitions and UI so there are no missing asset paths.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/game/challenges/BrawlChallenge.tsx",
-          "frontend/src/game/story/chapters.ts",
-          "frontend/src/screens/ChapterScreen.tsx"
+          "frontend/public/assets/generated/streetfighter-char-1-portrait.dim_768x768.png",
+          "frontend/public/assets/generated/streetfighter-char-2-portrait.dim_768x768.png",
+          "frontend/public/assets/generated/streetfighter-char-3-portrait.dim_768x768.png",
+          "frontend/src/game/characters/characters.ts"
         ],
         "matchedFiles": [
-          "frontend/src/game/challenges/BrawlChallenge.tsx",
-          "frontend/src/game/story/chapters.ts",
-          "frontend/src/screens/ChapterScreen.tsx"
-        ]
-      },
-      {
-        "id": "REQ-14",
-        "summary": "Generate and wire up new static image assets for the street fighting game (title background, chapter backgrounds, and character/scene illustration set) by placing them under `frontend/public/assets/generated` and updating all references so no missing-asset paths remain.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
-          "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
-          "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
-          "frontend/src/game/story/chapters.ts"
-        ],
-        "matchedFiles": [
-          "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
-          "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
-          "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
-          "frontend/src/screens/StartScreen.tsx",
-          "frontend/src/screens/ChapterScreen.tsx",
-          "frontend/src/game/story/chapters.ts"
+          "frontend/public/assets/generated/streetfighter-char-1-portrait.dim_768x768.png",
+          "frontend/public/assets/generated/streetfighter-char-2-portrait.dim_768x768.png",
+          "frontend/public/assets/generated/streetfighter-char-3-portrait.dim_768x768.png",
+          "frontend/src/game/characters/characters.ts"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
-    "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
-    "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
-    "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
-    "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
-    "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
-    "frontend/src/components/Auth/LoginButton.tsx",
+    "frontend/public/assets/generated/streetfighter-char-1-portrait.dim_768x768.png",
+    "frontend/public/assets/generated/streetfighter-char-2-portrait.dim_768x768.png",
+    "frontend/public/assets/generated/streetfighter-char-3-portrait.dim_768x768.png",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
     "frontend/src/components/Auth/ProfileSetupModal.tsx",
-    "frontend/src/components/GameLayout.tsx",
+    "frontend/src/components/CharacterSelectModal.tsx",
     "frontend/src/components/Hud.tsx",
     "frontend/src/components/SaveLoadPanel.tsx",
-    "frontend/src/game/challenges/BrawlChallenge.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/game/characters/characterPersistence.ts",
+    "frontend/src/game/characters/characters.ts",
     "frontend/src/game/state/gameState.ts",
-    "frontend/src/game/story/chapters.ts",
-    "frontend/src/index.css",
     "frontend/src/screens/ChapterScreen.tsx",
     "frontend/src/screens/StartScreen.tsx",
-    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

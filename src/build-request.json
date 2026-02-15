@@ -1,132 +1,135 @@
 {
   "kind": "build_request",
-  "title": "Convert the current game into a street fighting game (new story, urban theme, brawl challenge)",
+  "title": "Add playable character selection and persistence",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-10",
-      "text": "Replace the existing Ramayana-inspired chapter content with an original, English, street-fighting storyline using the current chapter/mission structure (chapters with narratives, choices, objectives, and a challenge), keeping the same total number of chapters unless additional chapters are necessary for coherence.",
+      "id": "REQ-15",
+      "text": "Add a small set of predefined playable characters (at least 3) to the street-fighting game, each with a stable characterId, display name, short bio blurb, and portrait image path, and store these definitions in a dedicated frontend module so they can be reused across screens.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "make a street fight game"
+          "make in it character"
         ]
       },
       "acceptanceCriteria": [
-        "`frontend/src/game/story/chapters.ts` no longer contains Ramayana-specific names/places (e.g., Rama, Ayodhya, Ravana) and instead defines an original street-fight plot in English.",
-        "Each chapter still has: title, background image path, multiple narrative beats, at least 2 choices with stat effects, and an assigned challenge type.",
-        "Chapter progression remains gated by mission completion (read story + make a choice + complete the challenge)."
+        "There is a single source of truth for character definitions (e.g., an exported array) with at least 3 characters.",
+        "Each character definition includes: characterId (string), name (English), bio (English), and portrait image path under /assets/generated/.",
+        "CharacterIds are stable strings (not array indexes) and are used consistently across the app."
       ]
     },
     {
-      "id": "REQ-11",
-      "text": "Update the start screen and chapter screen user-facing text to match the street fighting theme (game title, descriptions, labels, and end-of-game messaging) while keeping the existing navigation and save/load entry points intact.",
+      "id": "REQ-16",
+      "text": "Implement a character selection UX so the player can choose a character before starting a new game, and ensure the selected character is clearly shown as selected and can be changed before confirming.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "make a street fight game"
+          "make in it character"
         ]
       },
       "acceptanceCriteria": [
-        "Start screen title/subtitle/intro copy are street-fight themed and in English (no Ramayana references).",
-        "Chapter screen labels that are player-visible (e.g., chapter descriptors, toasts, mission complete messaging) remain coherent for a street fighting game.",
-        "Save/Load and Internet Identity login/logout still function from the same screens/flows."
+        "From the Start screen, the user can open a character selection UI and pick one character from the predefined list.",
+        "The UI shows a clear selected state and a confirmation action (e.g., “Confirm Character”).",
+        "Starting a new game is blocked until a character is selected (with an English prompt explaining what to do)."
       ]
     },
     {
-      "id": "REQ-12",
-      "text": "Retheme the UI from the current parchment/epic aesthetic to a gritty urban street-fighting aesthetic (e.g., concrete/metal textures, high-contrast neutrals, punchy accent colors) and apply it consistently across start screen, HUD, cards, buttons, and mission status UI; do not introduce a default blue/purple look.",
-      "target": "frontend",
+      "id": "REQ-17",
+      "text": "Persist the selected character for authenticated users by extending the backend user profile to include the chosen characterId, and update the profile setup flow to collect both fighter name and character selection.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "make a street fight game"
+          "make in it character"
         ]
       },
       "acceptanceCriteria": [
-        "Global styling tokens/classes are updated so the app no longer reads as an ancient-epic/parchment theme.",
-        "The new theme is consistent across StartScreen, ChapterScreen, HUD, and SaveLoadPanel.",
-        "Primary/interactive accents avoid a default blue/purple palette."
+        "Motoko backend UserProfile includes a characterId field (or equivalent) that is saved and returned by getCallerUserProfile.",
+        "Profile setup UI collects: fighter name + character selection, validates both, and saves them together.",
+        "Existing users without a saved characterId do not crash the app; the UI prompts them to select a character and save/update their profile.",
+        "If a state migration is required for existing canister state, a conditional backend/migration.mo is added to preserve prior stored profiles by defaulting characterId to a valid character."
       ]
     },
     {
-      "id": "REQ-13",
-      "text": "Add a street-fight-appropriate interactive challenge used by at least one chapter (e.g., a simple combo/quick-time or timing-based brawl mini-game) and integrate it into the existing challenge selection/rendering flow so mission completion can depend on it.",
+      "id": "REQ-18",
+      "text": "Integrate the selected character into gameplay UI by displaying the chosen character (name and portrait) in the HUD and/or chapter screen, without changing the existing story structure (chapters/choices/challenges).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "make a street fight game"
+          "make in it character"
         ]
       },
       "acceptanceCriteria": [
-        "A new challenge component exists alongside existing challenges and can be selected by a chapter definition.",
-        "Completing the new challenge updates mission objective state (completedChallenge) and allows chapter advancement when all objectives are satisfied.",
-        "Challenge result rewards still map onto the existing tracked numeric state variables so save/load remains compatible."
+        "During gameplay, the HUD or chapter view displays the selected character name and portrait.",
+        "The displayed character matches the selection made before starting the game or loaded from the user profile when applicable.",
+        "No changes are required to the existing chapter progression, mission objectives logic, or challenge selection flow."
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Generate and wire up new static image assets for the street fighting game (title background, chapter backgrounds, and character/scene illustration set) by placing them under `frontend/public/assets/generated` and updating all references so no missing-asset paths remain.",
-      "target": "frontend",
+      "id": "REQ-19",
+      "text": "Ensure the selected character is preserved across Save/Load by including characterId in the saved progress payload and restoring it when loading progress.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "make a street fight game"
+          "make in it character"
         ]
       },
       "acceptanceCriteria": [
-        "All background/illustration `<img>` and layout background references point to files under `/assets/generated/` and load without 404s.",
-        "Start screen uses street-fight themed images (not Ramayana images).",
-        "Each chapter uses a street-fight themed background image path under `/assets/generated/`."
+        "Backend Progress type includes characterId (or equivalent) and saveProgress/loadProgress round-trip it.",
+        "SaveLoadPanel includes characterId when saving, and restores it when loading.",
+        "Loading progress saved before this change does not crash; characterId defaults to a valid character and the UI prompts the user to confirm/save if needed."
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Render any newly generated character portrait assets as static files under frontend/public/assets/generated and reference them from the character definitions and UI so there are no missing asset paths.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "make in it character"
+        ]
+      },
+      "acceptanceCriteria": [
+        "All new character portrait images are placed under frontend/public/assets/generated.",
+        "All character portrait references in code use absolute paths starting with /assets/generated/.",
+        "App has no broken image links for character portraits on Start screen and in-game UI."
       ]
     }
   ],
   "constraints": [
-    "Backend must remain a single Motoko actor in `backend/main.mo`.",
-    "Do not edit files under `frontend/src/components/ui` or the immutable hook/bootstrap paths listed in SYSTEM_CONTEXT.",
-    "All user-facing text introduced/changed for this request must be in English.",
-    "Generated images must be static frontend assets placed under `frontend/public/assets/generated` (no backend image serving)."
+    "Do not edit files under frontend/src/components/ui or any paths listed in frontend.immutablePaths.",
+    "Keep the backend as a single Motoko actor in backend/main.mo; only add backend/migration.mo if state upgrade compatibility requires it.",
+    "Use English for all new user-facing text.",
+    "Do not introduce default blue/purple styling; keep the existing gritty street-fighting aesthetic."
   ],
   "nonGoals": [
-    "Multiplayer, PvP matchmaking, real-time combat, or networking features.",
-    "Third-party auth providers beyond Internet Identity.",
-    "Adding an external database or non-Motoko backend services.",
-    "3D fighting gameplay (this request is satisfied with a 2D UI + mini-game challenge loop)."
+    "Do not add multiplayer, real-time features, chat, or leaderboards.",
+    "Do not add third-party authentication beyond Internet Identity.",
+    "Do not change the existing chapter count or replace the current street-fighting chapter narratives unless strictly required to display the selected character."
   ],
   "imageRequirements": {
     "required": [
-      "Gritty urban street fighting title background with city lights, alley silhouettes, and dramatic contrast (streetfight-title-bg.dim_1920x1080.png)",
-      "Urban alley fight scene background with wet pavement reflections and graffiti textures (streetfight-alley-bg.dim_1920x1080.png)",
-      "Warehouse/underground fight club background with ring lights and crowd silhouettes (streetfight-warehouse-bg.dim_1920x1080.png)",
-      "Rooftop/night skyline fight scene background with HVAC units and neon signage (streetfight-rooftop-bg.dim_1920x1080.png)",
-      "Stylized character portrait set (protagonist + 3 rivals) in a cohesive gritty illustration style (streetfight-portraits-set.dim_1024x1024.png)",
-      "Top-down or isometric city map/route illustration with districts marked as fight venues (streetfight-city-map.dim_1600x900.png)"
+      "Street fighter portrait, character 1 (streetfighter-char-1-portrait.dim_768x768.png)",
+      "Street fighter portrait, character 2 (streetfighter-char-2-portrait.dim_768x768.png)",
+      "Street fighter portrait, character 3 (streetfighter-char-3-portrait.dim_768x768.png)"
     ],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [
-      "Street fighting game theme (gritty urban aesthetic, English text)."
-    ],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

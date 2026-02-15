@@ -1,9 +1,9 @@
 {
   "frontend/src/index.css": "Global styles with gritty urban OKLCH color palette (concrete grays, steel, red/orange accents) for both light and dark modes, custom steel/concrete utilities, and sans-serif typography.",
   "frontend/tailwind.config.js": "Extended Tailwind configuration with modern sans-serif fonts, urban color tokens, steel shadows, and punch/shake animations for the street fighting aesthetic.",
-  "frontend/src/App.tsx": "Root component managing game state, authentication flow, profile setup modal, routing between start screen and chapter gameplay, and load game handler extended to restore mission objective completion.",
-  "frontend/src/hooks/useQueries.ts": "React Query hooks for user profile management (get/save) and game progress persistence (load/save) with proper actor dependency handling.",
-  "frontend/src/game/state/gameState.ts": "Core game state model with mission objective tracking per chapter, chapter progression logic gated by objective completion, and functions to create/load game sessions with street fighting themed objective labels.",
+  "frontend/src/App.tsx": "Root component managing game state, authentication, profile setup, character selection state initialized from user profile with proper falsy check (!userProfile instead of === null), and coordinating character selection flow with corrected onLoadGame signature.",
+  "frontend/src/hooks/useQueries.ts": "React Query hooks for user profile and game progress management supporting characterId field in both profile and progress types with proper typing and invalidation.",
+  "frontend/src/game/state/gameState.ts": "Core game state model extended with selectedCharacterId field, updated createNewGame to require characterId parameter, and loadGameFromProgress to accept and restore characterId with safe defaulting.",
   "frontend/src/game/state/reducer.ts": "State reducer handling player choices with double-counting prevention, challenge completion, narrative advancement with story-read tracking, and mission objective state updates.",
   "frontend/src/game/story/chapters.ts": "Three playable chapters with original street fighting narratives (First Blood, Underground Reputation, King of the Streets), branching choices with stat effects, and assigned challenge types including the new 'brawl' type.",
   "frontend/src/game/challenges/types.ts": "TypeScript interfaces for challenge system defining result structure and component props.",
@@ -11,11 +11,14 @@
   "frontend/src/game/challenges/TacticsChallenge.tsx": "Risk/reward tactical choice challenge with three strategies, random success rolls, and courage-based rewards.",
   "frontend/src/game/challenges/WisdomChallenge.tsx": "Dharma-based wisdom question challenge presenting moral dilemmas with wise/unwise answer paths and wisdom rewards.",
   "frontend/src/components/GameLayout.tsx": "Shared layout wrapper providing background image support with darker overlay and consistent content framing for all game screens.",
-  "frontend/src/components/Hud.tsx": "Always-visible heads-up display showing current round title and three tracked stats (Power, Skill, Guts) as badges with street fighting terminology.",
-  "frontend/src/components/SaveLoadPanel.tsx": "Save/load UI with authentication checks, blockchain progress persistence including mission objective data, and restoration of objective state on load with street fighting themed copy.",
+  "frontend/src/components/Hud.tsx": "HUD component displaying selected character portrait and name alongside round title and stats, resolving character from game state with safe defaults.",
+  "frontend/src/components/SaveLoadPanel.tsx": "Save/load UI extended to persist and restore characterId in progress payload, encoding/decoding between string and bigint formats, with corrected onLoadGame callback signature passing characterId before completedObjectives.",
   "frontend/src/components/Auth/LoginButton.tsx": "Internet Identity sign-in/sign-out button with loading states, query cache clearing on logout, and bold street fighting styling.",
-  "frontend/src/components/Auth/ProfileSetupModal.tsx": "First-login modal prompting for fighter name using dialog component with form validation and profile save mutation, themed for street fighting.",
-  "frontend/src/screens/StartScreen.tsx": "Title screen with urban street fighting theme, city territory map, fighter portraits, new game/load game actions, and authentication UI.",
-  "frontend/src/screens/ChapterScreen.tsx": "Main gameplay screen rendering narrative progression, player choices, interactive challenges including the new brawl challenge, mission objectives panel, and chapter advancement gated by objective completion.",
-  "frontend/src/game/challenges/BrawlChallenge.tsx": "Interactive street brawl mini-game with real-time combat mechanics, health bars, combo system, punch/kick/block actions, and rewards based on performance."
+  "frontend/src/components/Auth/ProfileSetupModal.tsx": "Extended profile setup modal collecting both fighter name and character selection, validating both fields, and saving them together with character ID encoded to bigint for backend storage.",
+  "frontend/src/screens/StartScreen.tsx": "Start screen with character selection UI, displaying selected fighter with portrait and name, blocking new game start until character is confirmed, with corrected onLoadGame prop signature matching App component.",
+  "frontend/src/screens/ChapterScreen.tsx": "Main gameplay screen displaying selected character portrait, name, and bio in side panel, with all existing chapter progression and challenge mechanics unchanged.",
+  "frontend/src/game/challenges/BrawlChallenge.tsx": "Interactive street brawl mini-game with real-time combat mechanics, health bars, combo system, punch/kick/block actions, and rewards based on performance.",
+  "frontend/src/game/characters/characters.ts": "Character definitions module exporting an array of 3 playable characters with stable string IDs, names, bios, and portrait paths, plus helper functions to resolve characters by ID with safe defaults.",
+  "frontend/src/game/characters/characterPersistence.ts": "Utilities to convert between stable string characterId (UI) and bigint indices (backend storage) with validation and safe fallback to default character.",
+  "frontend/src/components/CharacterSelectModal.tsx": "Character selection modal displaying all available fighters with portraits, bios, clear selected state, and confirmation action using shadcn Dialog and Card components."
 }

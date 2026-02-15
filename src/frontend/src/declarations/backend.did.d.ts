@@ -17,9 +17,10 @@ export interface ObjectiveProgress {
 export interface Progress {
   'completedObjectives' : Array<ObjectiveProgress>,
   'stateVariables' : Array<[string, string]>,
+  'characterId' : bigint,
   'chapter' : bigint,
 }
-export interface UserProfile { 'name' : string }
+export interface UserProfile { 'name' : string, 'characterId' : bigint }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };

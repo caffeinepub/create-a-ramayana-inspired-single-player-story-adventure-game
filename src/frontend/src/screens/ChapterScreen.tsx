@@ -21,6 +21,7 @@ import {
 import { gameReducer } from '../game/state/reducer';
 import { ChallengeResult } from '../game/challenges/types';
 import { chapters } from '../game/story/chapters';
+import { getCharacterByIdOrDefault } from '../game/characters/characters';
 import { toast } from 'sonner';
 import { ArrowLeft, ArrowRight, CheckCircle2, Circle } from 'lucide-react';
 
@@ -44,6 +45,7 @@ export default function ChapterScreen({ gameState, setGameState, onReturnToMenu 
   const isLastChapter = localState.currentChapter >= chapters.length - 1;
   const missionComplete = isMissionComplete(localState);
   const objectiveLabels = getObjectiveLabels(chapter);
+  const character = getCharacterByIdOrDefault(localState.selectedCharacterId);
 
   // Mark story as read when reaching last narrative
   useEffect(() => {
@@ -226,12 +228,16 @@ export default function ChapterScreen({ gameState, setGameState, onReturnToMenu 
           <div className="space-y-4">
             {/* Fighter Portrait */}
             <Card className="bg-card/95 backdrop-blur-sm steel-border">
-              <CardContent className="p-4">
+              <CardContent className="p-4 space-y-2">
                 <img
-                  src="/assets/generated/streetfight-portraits-set.dim_1024x1024.png"
-                  alt="Fighter"
+                  src={character.portraitPath}
+                  alt={character.name}
                   className="w-full rounded-sm border border-border"
                 />
+                <div className="text-center">
+                  <div className="font-bold font-display uppercase">{character.name}</div>
+                  <div className="text-xs text-muted-foreground">{character.bio}</div>
+                </div>
               </CardContent>
             </Card>
 

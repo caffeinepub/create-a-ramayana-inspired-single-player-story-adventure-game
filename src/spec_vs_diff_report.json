@@ -1,36 +1,71 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-15T15:45:41.500Z",
-  "summary": "Most requested street-fighting retheme work appears implemented: chapters rewritten with street-fight storylines and generated-asset paths, start/chapter copy updated, gritty theme tokens added, and a new BrawlChallenge integrated into the challenge flow with mission progression gated by objectives. However, the diff summary does not show the required generated image files being added under `frontend/public/assets/generated`, so asset generation/wiring cannot be fully verified.",
+  "generatedAt": "2026-02-15T15:57:36.373Z",
+  "summary": "Character definitions, selection UI, HUD integration, and backend/profile/progress persistence were implemented, but there are gaps around using stable string characterIds end-to-end, backward-compatible save/load behavior for older progress without characterId, and adding the required portrait assets under frontend/public/assets/generated.",
   "missing_requirements": [
     {
-      "id": "REQ-14",
-      "requirement": "Generate and wire up new static image assets for the street fighting game by placing them under `frontend/public/assets/generated` (title bg, chapter bgs, portraits set, city map) and update references so no missing-asset paths remain.",
-      "reason": "While multiple components now reference `/assets/generated/...png`, the diff summary does not list any newly added PNG files under `frontend/public/assets/generated`, so it’s not verifiable that the required images were actually added and will load without 404s.",
+      "id": "REQ-17",
+      "requirement": "Persist the selected characterId in the backend user profile using a stable string characterId (not an index) and use it consistently across the app.",
+      "reason": "The backend stores characterId as a Nat and the frontend encodes/decodes via array index, which conflicts with the requirement that characterIds are stable strings used consistently across the app.",
       "evidence": [
-        "frontend/src/screens/StartScreen.tsx (references /assets/generated/streetfight-title-bg.dim_1920x1080.png, ...city-map..., ...portraits-set...)",
-        "frontend/src/game/story/chapters.ts (references /assets/generated/streetfight-alley-bg..., ...warehouse..., ...rooftop...)",
-        "File diff summary: Added files list contains no `frontend/public/assets/generated/*.png` entries"
+        "backend/main.mo (UserProfile.characterId : Nat)",
+        "frontend/src/game/characters/characterPersistence.ts (encodeCharacterId maps to index; decodeCharacterId maps from index)",
+        "backend/migration.mo (defaults characterId = 0)"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "requirement": "Loading progress saved before this change does not crash; characterId defaults to a valid character and the UI prompts the user to confirm/save if needed.",
+      "reason": "The load flow in App explicitly errors and returns when characterId is missing instead of defaulting to a valid character and continuing with a prompt to confirm/save. Also, Progress now requires characterId on the backend, but the diff summary does not show defensive handling for older saved progress payloads that lack this field.",
+      "evidence": [
+        "frontend/src/App.tsx (handleLoadGame: if (!characterId) { toast.error(...); return; })",
+        "backend/main.mo (public type Progress includes required characterId : Nat)"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "requirement": "Add the new character portrait image files under frontend/public/assets/generated and reference them from /assets/generated/ paths so there are no broken links.",
+      "reason": "Code references three portrait PNGs under /assets/generated/, but the diff summary does not show any new static image files added under frontend/public/assets/generated.",
+      "evidence": [
+        "frontend/src/game/characters/characters.ts (portraitPath values under /assets/generated/...png)",
+        "File diff summary ADDED FILES list does not include any frontend/public/assets/generated/*.png"
       ]
     }
   ],
-  "hallucinated_features": [],
+  "hallucinated_features": [
+    {
+      "description": "Encoding/decoding characterId between stable string IDs (frontend) and bigint/Nat index values (backend storage).",
+      "reason": "The BuildRequest calls for persisting the chosen characterId, but does not request converting it into an index-based numeric representation; this also undermines the 'stable string characterId' requirement.",
+      "evidence": [
+        "frontend/src/game/characters/characterPersistence.ts",
+        "backend/main.mo (UserProfile.characterId : Nat; Progress.characterId : Nat)",
+        "backend/migration.mo (characterId : Nat)"
+      ]
+    },
+    {
+      "description": "Added/introduced a new 'brawl' mini-game / real-time combat mechanics (combo system, health bars).",
+      "reason": "Not requested by REQ-15 through REQ-20; these requirements focus on character selection/persistence and UI integration, and explicitly state not to change existing story/chapter structure unless required for displaying the selected character.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions frontend/src/game/challenges/BrawlChallenge.tsx with real-time combat mechanics)"
+      ]
+    }
+  ],
   "confidence": 0.74,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/Auth/LoginButton.tsx",
+    "frontend/src/App.tsx",
     "frontend/src/components/Auth/ProfileSetupModal.tsx",
-    "frontend/src/components/GameLayout.tsx",
+    "frontend/src/components/CharacterSelectModal.tsx",
     "frontend/src/components/Hud.tsx",
     "frontend/src/components/SaveLoadPanel.tsx",
-    "frontend/src/game/challenges/BrawlChallenge.tsx",
+    "frontend/src/game/characters/characterPersistence.ts",
+    "frontend/src/game/characters/characters.ts",
     "frontend/src/game/state/gameState.ts",
-    "frontend/src/game/story/chapters.ts",
-    "frontend/src/index.css",
     "frontend/src/screens/ChapterScreen.tsx",
     "frontend/src/screens/StartScreen.tsx",
-    "frontend/tailwind.config.js",
     "project_state.json"
   ]
 }

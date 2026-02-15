@@ -1,18 +1,47 @@
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import GameLayout from '../components/GameLayout';
 import SaveLoadPanel from '../components/SaveLoadPanel';
 import LoginButton from '../components/Auth/LoginButton';
+import CharacterSelectModal from '../components/CharacterSelectModal';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { getCharacterByIdOrDefault } from '../game/characters/characters';
+import { AlertCircle } from 'lucide-react';
+import type { ObjectiveProgress } from '../backend';
 
 interface StartScreenProps {
-  onStartNewGame: () => void;
-  onLoadGame: (chapter: number, stateVariables: Record<string, string>) => void;
+  onStartNewGame: (characterId: string) => void;
+  onLoadGame: (chapter: number, stateVariables: Record<string, string>, characterId?: string, completedObjectives?: Array<ObjectiveProgress>) => void;
+  selectedCharacterId: string | null;
+  onCharacterSelect: (characterId: string) => void;
 }
 
-export default function StartScreen({ onStartNewGame, onLoadGame }: StartScreenProps) {
+export default function StartScreen({ 
+  onStartNewGame, 
+  onLoadGame,
+  selectedCharacterId,
+  onCharacterSelect,
+}: StartScreenProps) {
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
+  const [showCharacterSelect, setShowCharacterSelect] = useState(false);
+
+  const selectedCharacter = selectedCharacterId 
+    ? getCharacterByIdOrDefault(selectedCharacterId) 
+    : null;
+
+  const handleStartGame = () => {
+    if (!selectedCharacterId) {
+      return; // Button should be disabled
+    }
+    onStartNewGame(selectedCharacterId);
+  };
+
+  const handleCharacterConfirm = (characterId: string) => {
+    onCharacterSelect(characterId);
+  };
 
   return (
     <GameLayout backgroundImage="/assets/generated/streetfight-title-bg.dim_1920x1080.png">
@@ -52,9 +81,51 @@ export default function StartScreen({ onStartNewGame, onLoadGame }: StartScreenP
                   The streets are brutal. Only the strongest survive. Build your reputation through underground fights, 
                   make tough choices, and prove you have what it takes to become a legend in the concrete jungle.
                 </p>
+
+                {/* Character Selection */}
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => setShowCharacterSelect(true)}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    {selectedCharacter ? 'Change Fighter' : 'Choose Fighter'}
+                  </Button>
+
+                  {selectedCharacter && (
+                    <Card className="border-primary/50 bg-primary/5">
+                      <CardContent className="p-3 flex items-center gap-3">
+                        <img 
+                          src={selectedCharacter.portraitPath}
+                          alt={selectedCharacter.name}
+                          className="w-16 h-16 rounded-sm border border-border object-cover"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-bold font-display uppercase text-sm">
+                            {selectedCharacter.name}
+                          </div>
+                          <div className="text-xs text-muted-foreground line-clamp-2">
+                            {selectedCharacter.bio}
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="shrink-0">Selected</Badge>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {!selectedCharacter && (
+                    <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-sm border border-border">
+                      <AlertCircle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <p className="text-xs text-muted-foreground">
+                        Choose and confirm a fighter before starting your journey.
+                      </p>
+                    </div>
+                  )}
+                </div>
                 
                 <Button 
-                  onClick={onStartNewGame} 
+                  onClick={handleStartGame}
+                  disabled={!selectedCharacter}
                   size="lg" 
                   className="w-full text-lg font-bold tracking-wide"
                 >
@@ -104,6 +175,13 @@ export default function StartScreen({ onStartNewGame, onLoadGame }: StartScreenP
           </div>
         </footer>
       </div>
+
+      <CharacterSelectModal
+        open={showCharacterSelect}
+        onClose={() => setShowCharacterSelect(false)}
+        onConfirm={handleCharacterConfirm}
+        initialSelection={selectedCharacterId || undefined}
+      />
     </GameLayout>
   );
 }

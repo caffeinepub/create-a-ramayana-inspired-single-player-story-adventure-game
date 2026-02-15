@@ -3,17 +3,18 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
-  // Initialize the access control system
+  // Initialize access control system
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
-  // User profile type as required by frontend
+  // Extended user profile including characterId
   public type UserProfile = {
     name : Text;
+    characterId : Nat;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -50,6 +51,7 @@ actor {
     chapter : Nat;
     stateVariables : [(Text, Text)];
     completedObjectives : [ObjectiveProgress];
+    characterId : Nat; // Persist characterId selection
   };
 
   let progressMap = Map.empty<Principal, Progress>();

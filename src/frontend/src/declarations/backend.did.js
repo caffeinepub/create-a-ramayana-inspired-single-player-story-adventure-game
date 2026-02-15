@@ -13,7 +13,10 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
-export const UserProfile = IDL.Record({ 'name' : IDL.Text });
+export const UserProfile = IDL.Record({
+  'name' : IDL.Text,
+  'characterId' : IDL.Nat,
+});
 export const ObjectiveProgress = IDL.Record({
   'missionId' : IDL.Nat,
   'objectives' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Bool)),
@@ -21,6 +24,7 @@ export const ObjectiveProgress = IDL.Record({
 export const Progress = IDL.Record({
   'completedObjectives' : IDL.Vec(ObjectiveProgress),
   'stateVariables' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
+  'characterId' : IDL.Nat,
   'chapter' : IDL.Nat,
 });
 
@@ -48,7 +52,10 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text });
+  const UserProfile = IDL.Record({
+    'name' : IDL.Text,
+    'characterId' : IDL.Nat,
+  });
   const ObjectiveProgress = IDL.Record({
     'missionId' : IDL.Nat,
     'objectives' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Bool)),
@@ -56,6 +63,7 @@ export const idlFactory = ({ IDL }) => {
   const Progress = IDL.Record({
     'completedObjectives' : IDL.Vec(ObjectiveProgress),
     'stateVariables' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
+    'characterId' : IDL.Nat,
     'chapter' : IDL.Nat,
   });
   

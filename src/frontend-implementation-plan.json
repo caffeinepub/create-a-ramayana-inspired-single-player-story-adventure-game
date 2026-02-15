@@ -1,185 +1,167 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Street-fighting retheme: new story, UI copy, gritty styling, new brawl challenge, and new images",
+  "title": "Playable character selection, display, and persistence wiring (frontend)",
   "requirements": [
     {
-      "id": "REQ-10",
-      "summary": "Rewrite chapter content into an original English street-fighting storyline while preserving the existing chapter/mission structure and chapter count.",
+      "id": "REQ-15",
+      "summary": "Create a single reusable frontend source of truth for at least 3 predefined playable characters with stable string IDs, bios, and generated portrait paths.",
       "acceptanceCriteria": [
-        "`frontend/src/game/story/chapters.ts` no longer contains Ramayana-specific names/places (e.g., Rama, Ayodhya, Ravana) and instead defines an original street-fight plot in English.",
-        "Each chapter still has: title, background image path, multiple narrative beats, at least 2 choices with stat effects, and an assigned challenge type.",
-        "Chapter progression remains gated by mission completion (read story + make a choice + complete the challenge)."
+        "There is a single source of truth for character definitions (e.g., an exported array) with at least 3 characters.",
+        "Each character definition includes: characterId (string), name (English), bio (English), and portrait image path under /assets/generated/.",
+        "CharacterIds are stable strings (not array indexes) and are used consistently across the app."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/game/story/chapters.ts",
-          "operation": "modify",
-          "description": "Replace all Ramayana-inspired chapter titles/narratives/choices with an original English urban street-fighting plot (keep the current number of chapters unless absolutely necessary), ensuring each chapter still defines background, multiple narrative beats, at least 2 stat-affecting choices, and a challengeType that matches the app’s challenge rendering flow."
+          "path": "frontend/src/game/characters/characters.ts",
+          "operation": "create",
+          "description": "Add a dedicated character definitions module exporting an array of at least 3 characters with stable string characterId, English name, English bio, and portraitPath referencing /assets/generated/streetfighter-char-1-portrait.dim_768x768.png, /assets/generated/streetfighter-char-2-portrait.dim_768x768.png, /assets/generated/streetfighter-char-3-portrait.dim_768x768.png. Also export small helpers to resolve character by id and to provide a safe default character. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/game/characters/characterPersistence.ts",
+          "operation": "create",
+          "description": "Add frontend-only mapping utilities to convert between stable string characterId used in the UI and the bigint-based characterId used by the current backend types (e.g., encode/decode helpers with validation + fallback to a valid default). Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-11",
-      "summary": "Update StartScreen and ChapterScreen player-facing copy to match the street-fighting theme without changing navigation or save/load/auth flows.",
+      "id": "REQ-16",
+      "summary": "Add a character selection UX from the Start screen that clearly shows selection, allows changing before confirmation, and blocks starting a new game until selected.",
       "acceptanceCriteria": [
-        "Start screen title/subtitle/intro copy are street-fight themed and in English (no Ramayana references).",
-        "Chapter screen labels that are player-visible (e.g., chapter descriptors, toasts, mission complete messaging) remain coherent for a street fighting game.",
-        "Save/Load and Internet Identity login/logout still function from the same screens/flows."
+        "From the Start screen, the user can open a character selection UI and pick one character from the predefined list.",
+        "The UI shows a clear selected state and a confirmation action (e.g., “Confirm Character”).",
+        "Starting a new game is blocked until a character is selected (with an English prompt explaining what to do)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/screens/StartScreen.tsx",
-          "operation": "modify",
-          "description": "Update all street-fight themed English copy (game title, subtitle, intro paragraph, card headings) while keeping existing navigation and SaveLoadPanel/LoginButton wiring intact; also update any Ramayana-referenced image alt text to match the new theme."
+          "path": "frontend/src/components/CharacterSelectModal.tsx",
+          "operation": "create",
+          "description": "Create a character selection modal that lists characters from frontend/src/game/characters/characters.ts, shows portrait/name/bio, supports a clear selected state, and exposes a confirm action + callbacks for select/confirm/close. Use existing shadcn-ui Dialog/Card/Button primitives without modifying frontend/src/components/ui. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "path": "frontend/src/screens/StartScreen.tsx",
           "operation": "modify",
-          "description": "Update chapter UI copy and toasts/end-of-game messaging to fit a gritty street-fighting narrative (English only) while preserving the same mission flow, save/load toggle behavior, and chapter progression behavior."
+          "description": "Wire a 'Choose Fighter' / character selection entry point on the Start screen, display the currently selected character (name + portrait) when chosen, and update the Start button behavior so starting a new game is blocked until a character is selected with an English prompt telling the user to choose and confirm a fighter first. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add app-level state for the pending/selected character for a new game, pass handlers/props to StartScreen for opening selection and confirming, and ensure createNewGame is only called after a character is confirmed. Ensure selection can be changed before confirming. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/game/state/gameState.ts",
           "operation": "modify",
-          "description": "Update objective label strings (player-visible) to be street-fight themed while keeping objective keys unchanged (readStory/madeChoice/completedChallenge) to preserve reducer logic and save/load compatibility."
-        },
+          "description": "Extend GameState to include selectedCharacterId (stable string), update createNewGame() to require/accept a chosen characterId, and update loadGameFromProgress() to accept/restore a characterId with safe defaulting when missing/invalid. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "summary": "Update profile setup UI to collect fighter name plus character selection and save them together; gracefully handle existing profiles missing a character selection.",
+      "acceptanceCriteria": [
+        "Motoko backend UserProfile includes a characterId field (or equivalent) that is saved and returned by getCallerUserProfile.",
+        "Profile setup UI collects: fighter name + character selection, validates both, and saves them together.",
+        "Existing users without a saved characterId do not crash the app; the UI prompts them to select a character and save/update their profile.",
+        "If a state migration is required for existing canister state, a conditional backend/migration.mo is added to preserve prior stored profiles by defaulting characterId to a valid character."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/Auth/ProfileSetupModal.tsx",
           "operation": "modify",
-          "description": "Update the profile setup modal’s visible strings to match the street-fighting theme (English), without altering the existing saveCallerUserProfile flow."
+          "description": "Extend the profile setup modal to also collect character selection (using the predefined list) in addition to fighter name, validate both, and save them together. Convert the selected stable string characterId into the bigint form expected by the current backend types using frontend/src/game/characters/characterPersistence.ts. Ensure all new user-facing text is English. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Adjust the profile setup gating so authenticated users with missing/invalid character selection in their loaded profile are prompted to pick a character and save/update. Also, when a valid profile is present, initialize the app's selected character from the profile so other screens can display it. Use the existing authorization-based authenticated profile flow patterns already in App/useQueries; verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Ensure the profile save mutation and profile query typing/usage supports saving/reading characterId alongside name (including any necessary frontend-level coercion). Handle authorization failures gracefully in UI via existing toast patterns. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-12",
-      "summary": "Retheme the app UI to a gritty urban street-fighting aesthetic via global tokens and shared styling applied consistently across screens and panels.",
+      "id": "REQ-18",
+      "summary": "Display the selected character (name + portrait) during gameplay (HUD and/or chapter view) without altering story/chapter logic.",
       "acceptanceCriteria": [
-        "Global styling tokens/classes are updated so the app no longer reads as an ancient-epic/parchment theme.",
-        "The new theme is consistent across StartScreen, ChapterScreen, HUD, and SaveLoadPanel.",
-        "Primary/interactive accents avoid a default blue/purple palette."
+        "During gameplay, the HUD or chapter view displays the selected character name and portrait.",
+        "The displayed character matches the selection made before starting the game or loaded from the user profile when applicable.",
+        "No changes are required to the existing chapter progression, mission objectives logic, or challenge selection flow."
       ],
       "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "modify",
-          "description": "Replace the current warm parchment palette and texture utilities with a gritty urban palette (high-contrast neutrals + punchy non-blue/non-purple accent, e.g. red/orange/lime), update global font styling away from epic serif, and adjust/replace decorative utilities so the UI reads as concrete/metal rather than parchment."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "Update Tailwind theme extensions to support the new gritty urban styling (fonts, shadows, and any named tokens currently implying ornate/epic styling) while keeping existing class usage stable across screens."
-        },
-        {
-          "path": "frontend/src/screens/StartScreen.tsx",
-          "operation": "modify",
-          "description": "Align StartScreen panel styling (cards/buttons/headers) to the new gritty urban theme by updating permissible class usage outside of `frontend/src/components/ui` (do not edit ui components)."
-        },
-        {
-          "path": "frontend/src/screens/ChapterScreen.tsx",
-          "operation": "modify",
-          "description": "Align ChapterScreen styling (story card, side panels, mission status UI) to the new gritty urban theme by updating permissible class usage outside of `frontend/src/components/ui` (do not edit ui components)."
-        },
         {
           "path": "frontend/src/components/Hud.tsx",
           "operation": "modify",
-          "description": "Update HUD styling and labels to fit the street-fight theme (e.g., stat label wording if desired) while keeping the same state variable keys and layout structure."
+          "description": "Integrate selected character display into the HUD by resolving gameState.selectedCharacterId via the shared character definitions and rendering character name + a small portrait. Keep styling consistent with the existing gritty aesthetic and avoid new blue/purple styling. Verify the component's usage instructions before implementing."
         },
+        {
+          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "operation": "modify",
+          "description": "Replace the generic fighter image in the side panel with the selected character portrait (and optionally name) derived from game state, without changing chapter progression/choices/challenge flow. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/game/state/gameState.ts",
+          "operation": "modify",
+          "description": "Ensure any state creation/loading paths used by gameplay always yield a valid selectedCharacterId so HUD/ChapterScreen never crash on missing character selection. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "summary": "Include characterId in save/load payload wiring so selection round-trips with progress; safely default older saves and prompt user to confirm/save if needed.",
+      "acceptanceCriteria": [
+        "Backend Progress type includes characterId (or equivalent) and saveProgress/loadProgress round-trip it.",
+        "SaveLoadPanel includes characterId when saving, and restores it when loading.",
+        "Loading progress saved before this change does not crash; characterId defaults to a valid character and the UI prompts the user to confirm/save if needed."
+      ],
+      "file_operations": [
         {
           "path": "frontend/src/components/SaveLoadPanel.tsx",
           "operation": "modify",
-          "description": "Update SaveLoadPanel visible copy and styling to match the gritty street-fighting theme while preserving existing Internet Identity and save/load behavior."
+          "description": "When saving, include the current selected character (convert stable string characterId from game state into bigint using frontend/src/game/characters/characterPersistence.ts) in the Progress payload. When loading, read characterId from loaded progress (if present), decode to stable string id with safe defaulting, and pass it through to the load callback. If characterId is missing/invalid (older saves), show an English prompt/toast telling the user to confirm a fighter and re-save. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/Auth/LoginButton.tsx",
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Adjust only the visual styling/classes (and optionally English button wording) to match the gritty urban theme without changing the existing login/logout logic or query cache clearing behavior."
+          "description": "Extend the onLoadGame plumbing to accept/restores a loaded character selection alongside chapter/state variables/objectives, update app state accordingly, and ensure gameplay displays match loaded selection. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/GameLayout.tsx",
+          "path": "frontend/src/game/state/gameState.ts",
           "operation": "modify",
-          "description": "Retheme the background overlay treatment (opacity/blur/tint) so background images feel like an urban, high-contrast fight poster style, while keeping the same backgroundImage prop wiring."
+          "description": "Update loadGameFromProgress() signature/logic to accept an optional characterId and store it on GameState; default safely for older progress that lacks character selection. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-13",
-      "summary": "Add a new street-fight mini-game challenge and integrate it into the existing challenge selection flow and mission completion state.",
+      "id": "REQ-20",
+      "summary": "Add newly generated portrait assets under frontend/public/assets/generated and reference them consistently via absolute /assets/generated paths.",
       "acceptanceCriteria": [
-        "A new challenge component exists alongside existing challenges and can be selected by a chapter definition.",
-        "Completing the new challenge updates mission objective state (completedChallenge) and allows chapter advancement when all objectives are satisfied.",
-        "Challenge result rewards still map onto the existing tracked numeric state variables so save/load remains compatible."
+        "All new character portrait images are placed under frontend/public/assets/generated.",
+        "All character portrait references in code use absolute paths starting with /assets/generated/.",
+        "App has no broken image links for character portraits on Start screen and in-game UI."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/game/challenges/BrawlChallenge.tsx",
+          "path": "frontend/public/assets/generated/streetfighter-char-1-portrait.dim_768x768.png",
           "operation": "create",
-          "description": "Create a new street-fight-appropriate 2D timing/combo/quick-time mini-game challenge component that emits a ChallengeResult (success/score/reward) using existing state variable keys (virtue/wisdom/courage)."
+          "description": "Add the generated portrait asset file so character definitions and UI can reference it without broken links."
         },
         {
-          "path": "frontend/src/game/story/chapters.ts",
+          "path": "frontend/public/assets/generated/streetfighter-char-2-portrait.dim_768x768.png",
+          "operation": "create",
+          "description": "Add the generated portrait asset file so character definitions and UI can reference it without broken links."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfighter-char-3-portrait.dim_768x768.png",
+          "operation": "create",
+          "description": "Add the generated portrait asset file so character definitions and UI can reference it without broken links."
+        },
+        {
+          "path": "frontend/src/game/characters/characters.ts",
           "operation": "modify",
-          "description": "Extend Chapter.challengeType to include the new brawl challenge type and assign it to at least one chapter so it is exercised in gameplay."
-        },
-        {
-          "path": "frontend/src/screens/ChapterScreen.tsx",
-          "operation": "modify",
-          "description": "Integrate the new challenge into the existing renderChallenge switch so it can be rendered from chapter.challengeType and completion continues to dispatch COMPLETE_CHALLENGE to satisfy mission objectives."
-        }
-      ]
-    },
-    {
-      "id": "REQ-14",
-      "summary": "Add and wire new static street-fighting image assets under frontend/public/assets/generated and update all UI references to avoid missing assets.",
-      "acceptanceCriteria": [
-        "All background/illustration `<img>` and layout background references point to files under `/assets/generated/` and load without 404s.",
-        "Start screen uses street-fight themed images (not Ramayana images).",
-        "Each chapter uses a street-fight themed background image path under `/assets/generated/`."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
-          "operation": "create",
-          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png` (static frontend asset; no backend image serving)."
-        },
-        {
-          "path": "frontend/src/screens/StartScreen.tsx",
-          "operation": "modify",
-          "description": "Update StartScreen image references to use the new generated assets: `frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png` for the layout background, `frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png` for the map illustration, and `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` for the character portrait card."
-        },
-        {
-          "path": "frontend/src/screens/ChapterScreen.tsx",
-          "operation": "modify",
-          "description": "Update ChapterScreen side portrait image reference to `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` and ensure all chapter background usage continues to come from chapter definitions under `/assets/generated/`."
-        },
-        {
-          "path": "frontend/src/game/story/chapters.ts",
-          "operation": "modify",
-          "description": "Update every chapter background path to point to the new generated street-fight backgrounds under `/assets/generated/` (e.g., alley/warehouse/rooftop), ensuring no remaining Ramayana asset paths are referenced."
+          "description": "Ensure all portrait references in character definitions use absolute paths beginning with /assets/generated/ and match the generated filenames exactly. Verify the component's usage instructions before implementing."
         }
       ]
     }
