@@ -1,0 +1,187 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Street-fighting retheme: new story, UI copy, gritty styling, new brawl challenge, and new images",
+  "requirements": [
+    {
+      "id": "REQ-10",
+      "summary": "Rewrite chapter content into an original English street-fighting storyline while preserving the existing chapter/mission structure and chapter count.",
+      "acceptanceCriteria": [
+        "`frontend/src/game/story/chapters.ts` no longer contains Ramayana-specific names/places (e.g., Rama, Ayodhya, Ravana) and instead defines an original street-fight plot in English.",
+        "Each chapter still has: title, background image path, multiple narrative beats, at least 2 choices with stat effects, and an assigned challenge type.",
+        "Chapter progression remains gated by mission completion (read story + make a choice + complete the challenge)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/game/story/chapters.ts",
+          "operation": "modify",
+          "description": "Replace all Ramayana-inspired chapter titles/narratives/choices with an original English urban street-fighting plot (keep the current number of chapters unless absolutely necessary), ensuring each chapter still defines background, multiple narrative beats, at least 2 stat-affecting choices, and a challengeType that matches the app’s challenge rendering flow."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Update StartScreen and ChapterScreen player-facing copy to match the street-fighting theme without changing navigation or save/load/auth flows.",
+      "acceptanceCriteria": [
+        "Start screen title/subtitle/intro copy are street-fight themed and in English (no Ramayana references).",
+        "Chapter screen labels that are player-visible (e.g., chapter descriptors, toasts, mission complete messaging) remain coherent for a street fighting game.",
+        "Save/Load and Internet Identity login/logout still function from the same screens/flows."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/screens/StartScreen.tsx",
+          "operation": "modify",
+          "description": "Update all street-fight themed English copy (game title, subtitle, intro paragraph, card headings) while keeping existing navigation and SaveLoadPanel/LoginButton wiring intact; also update any Ramayana-referenced image alt text to match the new theme."
+        },
+        {
+          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "operation": "modify",
+          "description": "Update chapter UI copy and toasts/end-of-game messaging to fit a gritty street-fighting narrative (English only) while preserving the same mission flow, save/load toggle behavior, and chapter progression behavior."
+        },
+        {
+          "path": "frontend/src/game/state/gameState.ts",
+          "operation": "modify",
+          "description": "Update objective label strings (player-visible) to be street-fight themed while keeping objective keys unchanged (readStory/madeChoice/completedChallenge) to preserve reducer logic and save/load compatibility."
+        },
+        {
+          "path": "frontend/src/components/Auth/ProfileSetupModal.tsx",
+          "operation": "modify",
+          "description": "Update the profile setup modal’s visible strings to match the street-fighting theme (English), without altering the existing saveCallerUserProfile flow."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Retheme the app UI to a gritty urban street-fighting aesthetic via global tokens and shared styling applied consistently across screens and panels.",
+      "acceptanceCriteria": [
+        "Global styling tokens/classes are updated so the app no longer reads as an ancient-epic/parchment theme.",
+        "The new theme is consistent across StartScreen, ChapterScreen, HUD, and SaveLoadPanel.",
+        "Primary/interactive accents avoid a default blue/purple palette."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Replace the current warm parchment palette and texture utilities with a gritty urban palette (high-contrast neutrals + punchy non-blue/non-purple accent, e.g. red/orange/lime), update global font styling away from epic serif, and adjust/replace decorative utilities so the UI reads as concrete/metal rather than parchment."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Update Tailwind theme extensions to support the new gritty urban styling (fonts, shadows, and any named tokens currently implying ornate/epic styling) while keeping existing class usage stable across screens."
+        },
+        {
+          "path": "frontend/src/screens/StartScreen.tsx",
+          "operation": "modify",
+          "description": "Align StartScreen panel styling (cards/buttons/headers) to the new gritty urban theme by updating permissible class usage outside of `frontend/src/components/ui` (do not edit ui components)."
+        },
+        {
+          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "operation": "modify",
+          "description": "Align ChapterScreen styling (story card, side panels, mission status UI) to the new gritty urban theme by updating permissible class usage outside of `frontend/src/components/ui` (do not edit ui components)."
+        },
+        {
+          "path": "frontend/src/components/Hud.tsx",
+          "operation": "modify",
+          "description": "Update HUD styling and labels to fit the street-fight theme (e.g., stat label wording if desired) while keeping the same state variable keys and layout structure."
+        },
+        {
+          "path": "frontend/src/components/SaveLoadPanel.tsx",
+          "operation": "modify",
+          "description": "Update SaveLoadPanel visible copy and styling to match the gritty street-fighting theme while preserving existing Internet Identity and save/load behavior."
+        },
+        {
+          "path": "frontend/src/components/Auth/LoginButton.tsx",
+          "operation": "modify",
+          "description": "Adjust only the visual styling/classes (and optionally English button wording) to match the gritty urban theme without changing the existing login/logout logic or query cache clearing behavior."
+        },
+        {
+          "path": "frontend/src/components/GameLayout.tsx",
+          "operation": "modify",
+          "description": "Retheme the background overlay treatment (opacity/blur/tint) so background images feel like an urban, high-contrast fight poster style, while keeping the same backgroundImage prop wiring."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Add a new street-fight mini-game challenge and integrate it into the existing challenge selection flow and mission completion state.",
+      "acceptanceCriteria": [
+        "A new challenge component exists alongside existing challenges and can be selected by a chapter definition.",
+        "Completing the new challenge updates mission objective state (completedChallenge) and allows chapter advancement when all objectives are satisfied.",
+        "Challenge result rewards still map onto the existing tracked numeric state variables so save/load remains compatible."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/game/challenges/BrawlChallenge.tsx",
+          "operation": "create",
+          "description": "Create a new street-fight-appropriate 2D timing/combo/quick-time mini-game challenge component that emits a ChallengeResult (success/score/reward) using existing state variable keys (virtue/wisdom/courage)."
+        },
+        {
+          "path": "frontend/src/game/story/chapters.ts",
+          "operation": "modify",
+          "description": "Extend Chapter.challengeType to include the new brawl challenge type and assign it to at least one chapter so it is exercised in gameplay."
+        },
+        {
+          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "operation": "modify",
+          "description": "Integrate the new challenge into the existing renderChallenge switch so it can be rendered from chapter.challengeType and completion continues to dispatch COMPLETE_CHALLENGE to satisfy mission objectives."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Add and wire new static street-fighting image assets under frontend/public/assets/generated and update all UI references to avoid missing assets.",
+      "acceptanceCriteria": [
+        "All background/illustration `<img>` and layout background references point to files under `/assets/generated/` and load without 404s.",
+        "Start screen uses street-fight themed images (not Ramayana images).",
+        "Each chapter uses a street-fight themed background image path under `/assets/generated/`."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated image asset file at `frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png` (static frontend asset; no backend image serving)."
+        },
+        {
+          "path": "frontend/src/screens/StartScreen.tsx",
+          "operation": "modify",
+          "description": "Update StartScreen image references to use the new generated assets: `frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png` for the layout background, `frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png` for the map illustration, and `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` for the character portrait card."
+        },
+        {
+          "path": "frontend/src/screens/ChapterScreen.tsx",
+          "operation": "modify",
+          "description": "Update ChapterScreen side portrait image reference to `frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png` and ensure all chapter background usage continues to come from chapter definitions under `/assets/generated/`."
+        },
+        {
+          "path": "frontend/src/game/story/chapters.ts",
+          "operation": "modify",
+          "description": "Update every chapter background path to point to the new generated street-fight backgrounds under `/assets/generated/` (e.g., alley/warehouse/rooftop), ensuring no remaining Ramayana asset paths are referenced."
+        }
+      ]
+    }
+  ]
+}

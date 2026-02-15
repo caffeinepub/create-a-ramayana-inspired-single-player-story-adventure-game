@@ -1,0 +1,138 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T15:45:41.504Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 5,
+    "implemented": 5,
+    "items": [
+      {
+        "id": "REQ-10",
+        "summary": "Replace the existing Ramayana-inspired chapter content with an original, English, street-fighting storyline using the current chapter/mission structure (chapters with narratives, choices, objectives, and a challenge), keeping the same total number of chapters unless additional chapters are necessary for coherence.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/game/story/chapters.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/game/story/chapters.ts"
+        ]
+      },
+      {
+        "id": "REQ-11",
+        "summary": "Update the start screen and chapter screen user-facing text to match the street fighting theme (game title, descriptions, labels, and end-of-game messaging) while keeping the existing navigation and save/load entry points intact.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/state/gameState.ts",
+          "frontend/src/components/Auth/ProfileSetupModal.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/state/gameState.ts",
+          "frontend/src/components/Auth/ProfileSetupModal.tsx"
+        ]
+      },
+      {
+        "id": "REQ-12",
+        "summary": "Retheme the UI from the current parchment/epic aesthetic to a gritty urban street-fighting aesthetic (e.g., concrete/metal textures, high-contrast neutrals, punchy accent colors) and apply it consistently across start screen, HUD, cards, buttons, and mission status UI; do not introduce a default blue/purple look.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/components/Hud.tsx",
+          "frontend/src/components/SaveLoadPanel.tsx",
+          "frontend/src/components/Auth/LoginButton.tsx",
+          "frontend/src/components/GameLayout.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/index.css",
+          "frontend/tailwind.config.js",
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/components/Hud.tsx",
+          "frontend/src/components/SaveLoadPanel.tsx",
+          "frontend/src/components/Auth/LoginButton.tsx",
+          "frontend/src/components/GameLayout.tsx"
+        ]
+      },
+      {
+        "id": "REQ-13",
+        "summary": "Add a street-fight-appropriate interactive challenge used by at least one chapter (e.g., a simple combo/quick-time or timing-based brawl mini-game) and integrate it into the existing challenge selection/rendering flow so mission completion can depend on it.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/game/challenges/BrawlChallenge.tsx",
+          "frontend/src/game/story/chapters.ts",
+          "frontend/src/screens/ChapterScreen.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/game/challenges/BrawlChallenge.tsx",
+          "frontend/src/game/story/chapters.ts",
+          "frontend/src/screens/ChapterScreen.tsx"
+        ]
+      },
+      {
+        "id": "REQ-14",
+        "summary": "Generate and wire up new static image assets for the street fighting game (title background, chapter backgrounds, and character/scene illustration set) by placing them under `frontend/public/assets/generated` and updating all references so no missing-asset paths remain.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
+          "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/story/chapters.ts"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
+          "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
+          "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
+          "frontend/src/screens/StartScreen.tsx",
+          "frontend/src/screens/ChapterScreen.tsx",
+          "frontend/src/game/story/chapters.ts"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/public/assets/generated/streetfight-alley-bg.dim_1920x1080.png",
+    "frontend/public/assets/generated/streetfight-city-map.dim_1600x900.png",
+    "frontend/public/assets/generated/streetfight-portraits-set.dim_1024x1024.png",
+    "frontend/public/assets/generated/streetfight-rooftop-bg.dim_1920x1080.png",
+    "frontend/public/assets/generated/streetfight-title-bg.dim_1920x1080.png",
+    "frontend/public/assets/generated/streetfight-warehouse-bg.dim_1920x1080.png",
+    "frontend/src/components/Auth/LoginButton.tsx",
+    "frontend/src/components/Auth/ProfileSetupModal.tsx",
+    "frontend/src/components/GameLayout.tsx",
+    "frontend/src/components/Hud.tsx",
+    "frontend/src/components/SaveLoadPanel.tsx",
+    "frontend/src/game/challenges/BrawlChallenge.tsx",
+    "frontend/src/game/state/gameState.ts",
+    "frontend/src/game/story/chapters.ts",
+    "frontend/src/index.css",
+    "frontend/src/screens/ChapterScreen.tsx",
+    "frontend/src/screens/StartScreen.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

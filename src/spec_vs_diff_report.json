@@ -1,0 +1,36 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-15T15:45:41.500Z",
+  "summary": "Most requested street-fighting retheme work appears implemented: chapters rewritten with street-fight storylines and generated-asset paths, start/chapter copy updated, gritty theme tokens added, and a new BrawlChallenge integrated into the challenge flow with mission progression gated by objectives. However, the diff summary does not show the required generated image files being added under `frontend/public/assets/generated`, so asset generation/wiring cannot be fully verified.",
+  "missing_requirements": [
+    {
+      "id": "REQ-14",
+      "requirement": "Generate and wire up new static image assets for the street fighting game by placing them under `frontend/public/assets/generated` (title bg, chapter bgs, portraits set, city map) and update references so no missing-asset paths remain.",
+      "reason": "While multiple components now reference `/assets/generated/...png`, the diff summary does not list any newly added PNG files under `frontend/public/assets/generated`, so it’s not verifiable that the required images were actually added and will load without 404s.",
+      "evidence": [
+        "frontend/src/screens/StartScreen.tsx (references /assets/generated/streetfight-title-bg.dim_1920x1080.png, ...city-map..., ...portraits-set...)",
+        "frontend/src/game/story/chapters.ts (references /assets/generated/streetfight-alley-bg..., ...warehouse..., ...rooftop...)",
+        "File diff summary: Added files list contains no `frontend/public/assets/generated/*.png` entries"
+      ]
+    }
+  ],
+  "hallucinated_features": [],
+  "confidence": 0.74,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/Auth/LoginButton.tsx",
+    "frontend/src/components/Auth/ProfileSetupModal.tsx",
+    "frontend/src/components/GameLayout.tsx",
+    "frontend/src/components/Hud.tsx",
+    "frontend/src/components/SaveLoadPanel.tsx",
+    "frontend/src/game/challenges/BrawlChallenge.tsx",
+    "frontend/src/game/state/gameState.ts",
+    "frontend/src/game/story/chapters.ts",
+    "frontend/src/index.css",
+    "frontend/src/screens/ChapterScreen.tsx",
+    "frontend/src/screens/StartScreen.tsx",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}

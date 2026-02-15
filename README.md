@@ -1,2 +1,3 @@
-# create-a-ramayana-inspired-single-player-story-adventure-game
-Exported from Caffeine project: Create a Ramayana-inspired single-player story adventure game
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

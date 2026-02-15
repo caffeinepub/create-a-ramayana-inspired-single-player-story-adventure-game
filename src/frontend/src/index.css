@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.125rem;
+        /* Gritty urban palette - concrete, steel, and fire */
+        --background: 0.95 0.005 240;
+        --foreground: 0.15 0.01 240;
+        --card: 0.98 0.003 240;
+        --card-foreground: 0.15 0.01 240;
+        --popover: 0.98 0.003 240;
+        --popover-foreground: 0.15 0.01 240;
+        --primary: 0.50 0.22 25;
+        --primary-foreground: 0.98 0.003 240;
+        --secondary: 0.40 0.01 240;
+        --secondary-foreground: 0.98 0.003 240;
+        --muted: 0.88 0.005 240;
+        --muted-foreground: 0.45 0.01 240;
+        --accent: 0.55 0.20 35;
+        --accent-foreground: 0.98 0.003 240;
+        --destructive: 0.55 0.25 15;
+        --destructive-foreground: 0.98 0.003 240;
+        --border: 0.70 0.01 240;
+        --input: 0.85 0.005 240;
+        --ring: 0.50 0.22 25;
+        --chart-1: 0.50 0.22 25;
+        --chart-2: 0.55 0.20 35;
+        --chart-3: 0.45 0.18 15;
+        --chart-4: 0.60 0.15 45;
+        --chart-5: 0.40 0.12 240;
+    }
+
+    .dark {
+        --background: 0.12 0.01 240;
+        --foreground: 0.92 0.005 240;
+        --card: 0.18 0.01 240;
+        --card-foreground: 0.92 0.005 240;
+        --popover: 0.15 0.01 240;
+        --popover-foreground: 0.92 0.005 240;
+        --primary: 0.60 0.22 25;
+        --primary-foreground: 0.12 0.01 240;
+        --secondary: 0.25 0.01 240;
+        --secondary-foreground: 0.92 0.005 240;
+        --muted: 0.22 0.01 240;
+        --muted-foreground: 0.60 0.01 240;
+        --accent: 0.65 0.20 35;
+        --accent-foreground: 0.92 0.005 240;
+        --destructive: 0.60 0.25 15;
+        --destructive-foreground: 0.92 0.005 240;
+        --border: 0.28 0.01 240;
+        --input: 0.22 0.01 240;
+        --ring: 0.60 0.22 25;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+    }
+}
+
+@layer utilities {
+    .steel-border {
+        border-width: 2px;
+        border-style: solid;
+        border-color: oklch(var(--border));
+        box-shadow: inset 0 1px 0 oklch(var(--foreground) / 0.1);
+    }
+    
+    .concrete-texture {
+        background-image: 
+            linear-gradient(90deg, transparent 0%, oklch(var(--muted) / 0.2) 50%, transparent 100%),
+            repeating-linear-gradient(45deg, transparent, transparent 3px, oklch(var(--border) / 0.05) 3px, oklch(var(--border) / 0.05) 6px);
+    }
+    
+    .glow-red {
+        text-shadow: 0 0 20px oklch(var(--primary) / 0.5);
+    }
+}
